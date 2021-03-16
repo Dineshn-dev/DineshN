@@ -1,4 +1,4 @@
-//code for half adder in dataflow modelling
+//code for half adder in gate_level_modelling
 module half_adder(x,y,sum,cout);
 input x,y;
 output sum,cout;
