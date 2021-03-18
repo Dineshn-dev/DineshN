@@ -1,9 +1,8 @@
-//code for full adder//
-module full_adder(a,b,cin,sum,cout)
+module full_adder(a,b,cin,sum,cout);
 input a,b,cin;
 output sum,cout;
-assgin sum=a^b^cin;
-assgin cout=ab+acin+cina;
+assign sum=(a^b)^cin;
+assign cout=(a&b)|(b&cin)|(cin&a);
 endmodule
 
 //code for ripple carrry adder
@@ -13,12 +12,12 @@ input cin;
 output [7:0] sum;
 wire [6:0]cot;
 output cout;
-full_adder(a[0],b[0],cin,sum[0],cout[0]);
-full_adder(a[0],b[0],cot[0],sum[1],cot[1]);
-full_adder(a[0],b[0],cot[1],sum[2],cot[2]);
-full_adder(a[0],b[0],cot[2],sum[3],cot[3]);
-full_adder(a[0],b[0],cot[3],sum[4],cot[4]);
-full_adder(a[0],b[0],cot[4],sum[5],cot[5]);
-full_adder(a[0],b[0],cot[5],sum[6],cot[6]);
-full_adder(a[0],b[0],cot[6],sum[7],cout);
+full_adder a1 (a[0],b[0],cin,sum[0],cot[0]);
+full_adder a2 (a[1],b[1],cot[0],sum[1],cot[1]);
+full_adder a3 (a[2],b[2],cot[1],sum[2],cot[2]);
+full_adder a4 (a[3],b[3],cot[2],sum[3],cot[3]);
+full_adder a5 (a[4],b[4],cot[3],sum[4],cot[4]);
+full_adder a6 (a[5],b[5],cot[4],sum[5],cot[5]);
+full_adder a7 (a[6],b[6],cot[5],sum[6],cot[6]);
+full_adder a8 (a[7],b[7],cot[6],sum[7],cout);
 endmodule
