@@ -1,7 +1,7 @@
-//code for half adder in gate_level_modelling
+//code for half adder 
 module half_adder(x,y,sum,cout);
 input x,y;
 output sum,cout;
-sum=x^y;
-cout=x&y;
+assign sum=x^y;
+assign cout=x&y;
 endmodule
