@@ -1,0 +1,85 @@
+//tflip flop with  q and qbar outputs
+
+module tflipflop(t,rst,clk,q,qb);
+input t,rst,clk;
+output reg q,qb;
+always@(posedge clk)
+begin
+if(rst)
+begin
+q=0;
+qb=~q;
+end
+else if(t==1)
+begin
+q=qb;
+qb=~q;
+end
+else
+begin
+q=q;
+qb=qb;
+end
+end
+endmodule
+
+//tflip flop with q output
+
+module tflipflop(t,rst,clk,q);
+input t,rst,clk;
+output reg q;
+always@(posedge clk)
+begin
+if(rst)
+q=0;
+else if(t==1)
+q=~q;
+else
+q=q;
+end
+endmodule
+
+//tflipflop testbench  with output q and qb 
+
+module tff_tb;
+
+	// Inputs
+	reg t;
+	reg rst;
+	reg clk;
+
+	// Outputs
+	wire q;
+	wire qb;
+
+	// Instantiate the Unit Under Test (UUT)
+	tflipflop uut (
+		.t(t), 
+		.rst(rst), 
+		.clk(clk), 
+		.q(q), 
+		.qb(qb)
+	);
+
+	initial begin
+		// Initialize Inputs
+		t = 0;
+		rst = 0;
+		clk = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+		t=1;
+		rst=1;#100;
+		t=0;
+		rst=0;#100;
+		t=1;
+		rst=0;#100;
+		t=0;
+		rst=0;#100;
+	end
+	always #100 clk=~clk;
+      
+endmodule
