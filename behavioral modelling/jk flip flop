@@ -1,0 +1,78 @@
+//jk flip flop
+module jkflip_flop(j,k,clk,rst,q,qb);
+input j,k,clk,rst;
+output reg q,qb;
+always@(posedge clk)
+begin
+if(rst==0)
+begin
+case({j,k})
+2'd0:q=q;
+2'd1:q=0;
+2'd2:q=1;
+2'd3:q=qb;
+endcase
+qb=~q;
+end
+else
+begin
+q=0;
+qb=~q;
+end
+end
+endmodule
+
+
+//test_bench for jk flipflop
+module jkff_tb;
+
+	// Inputs
+	reg j;
+	reg k;
+	reg clk;
+	reg rst;
+
+	// Outputs
+	wire q;
+	wire qb;
+
+	// Instantiate the Unit Under Test (UUT)
+	jkflip_flop uut (
+		.j(j), 
+		.k(k), 
+		.clk(clk), 
+		.rst(rst), 
+		.q(q), 
+		.qb(qb)
+	);
+
+	initial begin
+		// Initialize Inputs
+		j = 0;
+		k = 0;
+		clk = 0;
+		rst = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+      j = 0;
+		k = 0;
+		rst = 1;#200;
+		j = 0;
+		k = 0;
+		rst = 1;#200;
+		j = 0;
+		k = 1;
+		rst = 0;#200;
+		j = 1;
+		k = 0;
+		rst = 0;#200;
+    	j = 1;
+		k = 1;
+		rst = 0;#200;
+	end
+      always #100 clk=~clk;
+endmodule
+
