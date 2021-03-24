@@ -21,3 +21,31 @@ end
 end
 assign q=temp;
 endmodule
+
+//test_bench for johnson counter
+
+module jc_tb;
+reg [3:0]d;
+reg clk,rst,load;
+wire [3:0]q;
+johnson_counter uut(.d(d),.clk(clk),.rst(rst),.load(load),.q(q));
+initial
+begin
+//intialize the inputs
+clk=1;
+rst=1;
+load=0;
+//wait for global reset to finish
+#100;
+//adding stimulus here
+rst=1;
+load=1;
+d=4'd5;
+#100
+rst=0;
+load=1;
+d=4'd5;
+#100;
+end
+always #100 clk=~clk;
+endmodule
