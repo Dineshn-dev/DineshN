@@ -25,17 +25,21 @@ endmodule
 //test_bench for johnson counter
 
 module jc_tb;
+
+//inputs
+reg clk,rst;
 reg [3:0]d;
-reg clk,rst,load;
+reg load;
+//outputs
 wire [3:0]q;
-johnson_counter uut(.d(d),.clk(clk),.rst(rst),.load(load),.q(q));
+johnson_counter uut(.clk(clk),.rst(rst),.d(d),.load(load),.q(q));
 initial
 begin
 //intialize the inputs
 clk=1;
 rst=1;
 load=0;
-//wait for global reset to finish
+//wait for 100ns to finish global reset
 #100;
 //adding stimulus here
 rst=1;
@@ -47,5 +51,5 @@ load=1;
 d=4'd5;
 #100;
 end
-always #100 clk=~clk;
+always #50 clk=~clk;
 endmodule
