@@ -1,6 +1,6 @@
 // updown counter here the counter upcounts only if enable is 1 and downcounts if enable is 0
 
-module counter(q,rst,clk,en);
+module counter(clk,rst,en,d,q);
 input clk,rst;
 output reg [3:0] q;
 input en;
@@ -13,4 +13,30 @@ q<=q+4'd1;
 else
 q<=q-4'd1;
 end
+endmodule
+
+//testbench for updown counter
+module updown_tb;
+//inputs
+reg clk,rst,en;
+reg [3:0]d;
+//output
+wire q;
+counter uut(.clk(clk),.rst(rst),.en(en),.d(d),.q(q));
+initial
+begin
+//intialize the inputs
+clk=1;
+rst=1;
+en=0;
+//wait for 100ns global reset to finish
+#100;
+//adding stimulus here
+rst=0;
+en=1;
+#100;
+en=0;
+#100;
+end
+always #50 clk=~clk;
 endmodule
