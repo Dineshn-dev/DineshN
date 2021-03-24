@@ -25,7 +25,6 @@ endmodule
 //test_bench for johnson counter
 
 module jc_tb;
-
 //inputs
 reg clk,rst;
 reg [3:0]d;
