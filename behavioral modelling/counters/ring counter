@@ -1,0 +1,23 @@
+// ring counter provides 4 states of output
+
+module ring_counter(clk,rst,d,load,q);
+input [3:0]d;
+input clk,rst,load;
+output [3:0]q;
+reg [3:0]temp;
+always@(posedge clk or rst)
+begin
+if (rst)
+temp=4'd0;
+else if(load)
+temp<=d;
+else
+begin
+temp[0]<=temp[3];
+temp[1]<=temp[0];
+temp[2]<=temp[1];
+temp[3]<=temp[2];
+end
+end
+assign q=temp;
+endmodule
