@@ -1,0 +1,27 @@
+//2:1 mux 
+module _2_1_mux(a,b1,b2,s);
+input a,b1,b2;
+output reg s;
+always@* 
+begin 
+case(a)
+1'b0:s<=b1;
+1'b1:s<=b2;
+endcase
+end
+endmodule
+
+//fulladder using 2:1 mux
+
+module full_adder_using2_to_1mux(a,b,c1,sum,cout);
+input a,b,c1;
+output sum,cout;
+wire [1:0]s;
+wire [1:0]c;
+_2_1_mux u2(b,c1,~c1,s[0]);
+_2_1_mux u1(b,~c1,c1,s[1]);
+_2_1_mux u3(a,s[0],s[1],sum);
+_2_1_mux u4(b,1'b0,c1,c[0]);
+_2_1_mux u5(b,c1,1'b1,c[1]);
+_2_1_mux u6(a,c[0],c[1],cout);
+endmodule
