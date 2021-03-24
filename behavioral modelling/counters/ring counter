@@ -21,3 +21,34 @@ end
 end
 assign q=temp;
 endmodule
+
+//test bench for ring counter
+
+module ring_tb;
+//inputs
+reg clk;
+reg rst;
+reg [3:0]d;
+reg load;
+//outputs
+wire [3:0] q;
+ring_counter uut (.clk(clk),.rst(rst),.d(d),.load(load),.q(q));
+intial
+begin
+//intialize the inputs
+clk=1;
+rst=1;
+load=0;
+//delay of 100ns
+#100;
+//adding stimulus here
+rst=0;
+load=1;
+d=4'd7;
+#100;
+rst=0;
+load=0;
+#100;
+end
+always #50 clk=~clk;
+endmodule
