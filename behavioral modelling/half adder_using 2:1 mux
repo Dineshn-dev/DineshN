@@ -1,0 +1,22 @@
+// 2 to 1 mux using behavioural
+
+module _2_1_mux(a,b1,b2,s);
+input a,b1,b2;
+output reg s;
+always@* 
+begin 
+case(a)
+1'b0:s<=b1;
+1'b1:s<=b2;
+endcase
+end
+endmodule
+
+//half adder using  the above 2_1 mux
+
+module half_adder_using2_to_1mux(a,b,s,c);
+input a,b;
+output s,c;
+_2_1_mux a1(a,b,~b,s);
+_2_1_mux a2(a,1'b0,b,c);
+endmodule
