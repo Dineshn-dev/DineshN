@@ -11,3 +11,25 @@ case(a)
 endcase
 end
 endmodule
+
+//test bench for 2 to 1 mux
+
+module 2_1mux_tb;
+//inputs
+reg a,b1,b2;
+//output
+wire s;
+_2_1_mux(.a(a),.b1(b1),.b2(b2),.s(s));
+initial
+begin
+//intialize the inputs
+a=0;
+//wait for 100ns global reset to finish
+#100;
+//adding stimulus
+a=0;
+#100;
+a=1;
+#100;
+end
+endmodule
