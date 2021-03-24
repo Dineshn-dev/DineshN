@@ -1,0 +1,23 @@
+// johnson_counter provides 8 states of output
+
+module johnson_counter(clk,rst,d,load,q);
+input [3:0]d;
+input clk,rst,load;
+output [3:0]q;
+reg [3:0] temp;
+always@(posedge clk or rst )
+begin
+if (rst)
+temp<=4'b0000;
+else if(load)
+temp<=d;
+else
+begin
+temp[3]<=temp[0];
+temp[2]<=temp[1];
+temp[1]<=temp[2];
+temp[0]<=~temp[3];
+end
+end
+assign q=temp;
+endmodule
