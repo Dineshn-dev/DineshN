@@ -1,4 +1,4 @@
-//verilog code for mode counter
+//verilog code for mode 5 counter
 
 module modcounter(clk,rst,d,load,q
     );
@@ -12,7 +12,7 @@ if(rst)
 temp<=4'd0;
 else if(load)
 temp<=d;
-else if(q<4'd10)
+else if(q<4'd5)
 temp=temp+1;
 else
 temp<=temp;
@@ -21,7 +21,7 @@ assign q=temp;
 endmodule
 
 
-// testbench for mod counters
+// testbench for mod5 counters
 
 module modc_tb;
 
