@@ -1,4 +1,4 @@
-// verilog code for mod 12 counter
+// verilog code for mod 10 counter
 
 module modcounter(clk,rst,d,load,q
     );
@@ -12,7 +12,7 @@ if(rst)
 temp<=4'd0;
 else if(load)
 temp<=d;
-else if(q<4'd12)
+else if(q<4'd10)
 temp=temp+1;
 else
 temp<=temp;
@@ -20,7 +20,8 @@ end
 assign q=temp;
 endmodule
 
-// testbench module for mod 12 counter
+// testbench module for mod 10 counter
+
 module modc_tb;
 
 	// Inputs
