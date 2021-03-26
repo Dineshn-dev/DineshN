@@ -1,0 +1,65 @@
+//verilog code for modcounter 5counter
+
+module modcounter(clk,rst,d,load,q
+    );
+input clk,rst,load;
+input [3:0]d;
+output [3:0]q;
+reg [3:0]temp;
+always@(posedge clk)
+begin
+if(rst)
+temp<=4'd0;
+else if(load)
+temp<=d;
+else if(q<4'd10)
+temp=temp+1;
+else
+temp<=temp;
+end	
+assign q=temp;
+endmodule
+
+// testbench module for mod 5 counter
+module modc_tb;
+
+	// Inputs
+	reg clk;
+	reg rst;
+	reg [3:0] d;
+	reg load;
+
+	// Outputs
+	wire [3:0] q;
+
+	// Instantiate the Unit Under Test (UUT)
+	modcounter uut (
+		.clk(clk), 
+		.rst(rst), 
+		.d(d), 
+		.load(load), 
+		.q(q)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 1;
+		rst = 1;
+		d = 0;
+		load = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+      rst=0;
+		d=4'd3;
+		load=1;
+		#100;
+		rst=0;
+		load=0;
+		#100;
+	end
+    always #50 clk=~clk;  
+endmodule
+
