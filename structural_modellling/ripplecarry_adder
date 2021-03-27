@@ -1,0 +1,40 @@
+//verilog code for full adder 
+
+module full_adder(a,b,cin,s,cout
+    );
+input a,b,cin;
+output s,cout;
+assign s=(a^b)^cin;
+assign cout=(a&b)|(b&cin)|(cin&a);
+endmodule
+
+//verilog code for ripple carry adder
+
+module ripple_carry_adder(a,b3,b2,b1,b0,cin,s,cout);
+input [3:0]a;
+input b0,b1,b2,b3;
+input cin;
+output [3:0]s;
+output cout;
+wire [2:0]c;
+full_adder u1(a[0],b0,cin,s[0],c[0]);
+full_adder u2(a[1],b1,c[0],s[1],c[1]);
+full_adder u3(a[2],b2,c[1],s[2],c[2]);
+full_adder u4(a[3],b3,c[2],s[3],cout);
+endmodule
+
+//testbench for ripple carry adder 
+module rip_tb;
+//inputs
+reg [3:0] a;
+reg b0,b1,b2,b3,cin;
+//outputs
+wire s,cout;
+ripple_carry_adder uut(.a(a),.b3(b3),.b2(b2),.b1(b1),.b0(b0),.cin(cin),.s(s),.cout(cout));
+//intialize input
+a=0;
+b1=0;b2=0;b3=0;b0=0;
+cin=1;
+#100;
+end
+endmodule
