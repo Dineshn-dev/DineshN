@@ -1,7 +1,10 @@
 //verilog code for half adder
-module half_adder(s,c,a,b
-    );
 
+module half_adder(a,b,sum,cout);
+input a,b;
+output sum,cout;
+xor(sum,a,b);
+and(cout,a,b);
 endmodule
 
 //verilog code for 2x2 vedic multiplier
@@ -35,6 +38,7 @@ and y5 (x4,c,a);
 or y6 (x5,x2,x3);
 or y7 (cout,x5,x4);
 endmodule
+
 //verilog code for ripple carry adder
 
 module ripple_carry_adder(a,b3,b2,b1,b0,cin,s,cout);
@@ -71,6 +75,7 @@ assign sum[1:0]=m[1:0],sum[3:2]=y[26:25];
 endmodule
 ////////////////////////////////////////////////////////////////////////////////
 //test bench for 4x4 vedic multiplier;
+
 module vedic4x4multiplier_tb;
 
 	// Inputs
