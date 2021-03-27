@@ -1,0 +1,127 @@
+//verilog code for half adder
+module half_adder(s,c,a,b
+    );
+input a,b;
+output s,c;
+assign s=a^b;
+assign c=a&b;
+endmodule
+
+//verilog code for 2x2 vedic multiplier
+
+module vedic_multiplier_2x2(a1,a2,b1,b2,m,c1);
+input a1,a2,b1,b2;
+output [2:0]m;output c1;
+wire [2:0]s;
+wire c;
+and u8(m[0],a1,b1);
+and u9(s[0],a2,b1);
+and a3(s[1],a1,b2);
+and a4(s[2],a2,b2);
+half_adder u1(m[1],c,s[0],s[1]);
+half_adder u2(m[2],c1,c,s[2]);
+endmodule
+
+//verilog code for full adder
+
+module full_adder(a,b,cin,s,cout
+    );
+input a,b,cin;
+output s,cout;
+assign s=(a^b)^cin;
+assign cout=(a&b)|(b&cin)|(cin&a);
+endmodule
+
+//verilog code for ripple carry adder
+
+module ripple_carry_adder(a,b3,b2,b1,b0,cin,s,cout);
+input [3:0]a;
+input b0,b1,b2,b3;
+input cin;
+output [3:0]s;
+output cout;
+wire [2:0]c;
+full_adder u1(a[0],b0,cin,s[0],c[0]);
+full_adder u2(a[1],b1,c[0],s[1],c[1]);
+full_adder u3(a[2],b2,c[1],s[2],c[2]);
+full_adder u4(a[3],b3,c[2],s[3],cout);
+endmodule
+////////////////////////////////////////////////////////////////////////////////
+//verilog code for  4x4 vedic multiplier;
+
+module vedic4x4_multiplier(a,b,sum,c);
+input [3:0]a,b;
+output c;
+output [7:0]sum;
+wire [30:8]y;
+wire[3:0]m;
+wire c2;
+vedic_multiplier_2x2 u1(a[0],a[1],b[0],b[1],m[2:0],m[3]);
+vedic_multiplier_2x2 u2(a[0],a[1],b[2],b[3],y[10:8],y[11]);
+vedic_multiplier_2x2 u3(a[2],a[3],b[0],b[1],y[14:12],y[15]);
+vedic_multiplier_2x2 u4(a[2],a[3],b[2],b[3],y[18:16],y[19]);
+ripple_carry_adder u5(y[11:8],y[15],y[14],y[13],y[12],1'b0,y[23:20],y[24]);
+ripple_carry_adder u6(y[23:20],1'b0,1'b0,m[3],m[2],1'b0,y[28:25],c2);
+half_adder y1(y[29],y[30],y[24],c2);
+ripple_carry_adder a7(y[19:16],y[30],y[29],y[28],y[27],1'b0,sum[7:4],c);
+assign sum[1:0]=m[1:0],sum[3:2]=y[26:25];
+endmodule
+////////////////////////////////////////////////////////////////////////////////
+//test bench for 4x4 vedic multiplier;
+module vedic4x4multiplier_tb;
+
+	// Inputs
+	reg [3:0] a;
+	reg [3:0] b;
+
+	// Outputs
+	wire [7:0] sum;
+	wire c;
+
+	// Instantiate the Unit Under Test (UUT)
+	vedic4x4_multiplier uut (
+		.a(a), 
+		.b(b), 
+		.sum(sum), 
+		.c(c)
+	);
+
+	initial begin
+		// Initialize Inputs
+		a = 0;
+		b = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+		a=1;
+		b=2;
+		#100;
+		a=2;
+		b=3;
+		#100;
+		a=4;
+		b=7;
+		#100;
+		a=8;
+		b=3;
+		#100;
+		a=6;
+		b=4;
+		#100;
+		a=8;
+		b=10;
+		#100;
+		a=14;
+		b=15;
+		#100;
+		a=3;
+		b=9;
+		#100;
+		a=14;
+		b=12;
+		#100;
+	end
+      
+endmodule
