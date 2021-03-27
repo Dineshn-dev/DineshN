@@ -1,0 +1,74 @@
+
+//verilog code for dflip_flop 
+module dflip_flop_synchronous(d,rst,clk,q,qb
+    );
+input d,rst,clk;
+output reg q,qb;
+always@(posedge clk)
+begin
+if(rst)
+begin
+q=0;
+qb=~q;
+end
+else
+begin
+q=d;
+qb=~q;
+end
+end
+endmodule
+
+// verilog code for asynchronous counter using  dflipflop
+module async_counter_dff(clk,rst,d,q,qb
+    );
+input clk,rst,d;
+output [3:0] q,qb;
+dflip_flop_synchronous s1(qb[0],rst,clk,q[0],qb[0]);
+dflip_flop_synchronous s2(qb[1],rst,qb[0],q[1],qb[1]);
+dflip_flop_synchronous s3(qb[2],rst,qb[1],q[2],qb[2]);
+dflip_flop_synchronous s4(qb[3],rst,qb[2],q[3],qb[3]);
+endmodule
+
+
+//testbench code for asynchronous counter using dflipflop
+
+module asynch_coun_df_tb;
+
+	// Inputs
+	reg clk;
+	reg rst;
+	reg d;
+
+	// Outputs
+	wire [3:0] q;
+	wire [3:0] qb;
+
+	// Instantiate the Unit Under Test (UUT)
+	async_counter_dff uut (
+		.clk(clk), 
+		.rst(rst), 
+		.d(d), 
+		.q(q), 
+		.qb(qb)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 1;
+		rst = 1;
+		d = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+
+		rst = 0;
+		d =1;#100;
+		d=0;
+		rst =0;#100;
+	end
+	always #50 clk=~clk;
+
+endmodule
