@@ -1,0 +1,67 @@
+//verilog code fo dflipflop
+
+module dflip_flop(d,rst,clk,q,qb
+    );
+input d,rst,clk;
+output reg q,qb;
+always@(posedge clk)
+begin
+if(rst)
+begin
+q=0;
+qb=~q;
+end
+else
+begin
+q=d;
+qb=~q;
+end
+end
+endmodule
+
+//verilog code for johnson counter using dflipflop
+
+module johson_counter_using_dff(clk,rst,q,qb
+    );
+input clk,rst;
+output [3:0] q,qb;
+dflip_flop a1 (qb[3],rst,clk,q[0],qb[0]);
+dflip_flop a2(q[0],rst,clk,q[1],qb[1]);
+dflip_flop a3(q[1],rst,clk,q[2],qb[2]);
+dflip_flop a4(q[2],rst,clk,q[3],qb[3]);
+endmodule
+
+//testbench for johson counter using dflipflop
+module jc_dff_tb;
+
+	// Inputs
+	reg clk;
+	reg rst;
+
+	// Outputs
+	wire [3:0] q;
+	wire [3:0] qb;
+
+	// Instantiate the Unit Under Test (UUT)
+	johson_counter_using_dff uut (
+		.clk(clk), 
+		.rst(rst), 
+		.q(q), 
+		.qb(qb)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 1;
+		rst = 1;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+	 rst=0;
+	 #100;
+	 end
+	 always #50 clk=~clk;
+      
+endmodule
