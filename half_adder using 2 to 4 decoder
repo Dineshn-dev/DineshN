@@ -1,0 +1,74 @@
+////verilog code for 2 to 4 decoder;
+module decoder(d1,d2,en,out);
+input d1,d2;
+input en;
+output reg [3:0]out;
+always@*
+begin
+if(en)
+begin
+case({d1,d2})
+2'd0:out=4'd0;
+2'd1:out=4'd3;
+2'd2:out=4'd6;
+2'd3:out=4'd9;
+default:out=4'd0;
+endcase
+end
+else
+out=4'd0;
+end
+endmodule
+
+//////////////////////////////////verilog code  for half_adder usig 2 to 4 decoder///////////////////////////////////////
+module half_adder_usingdecoder(a,b,s,c);
+input a,b;
+output s,c;
+wire [3:0]out;
+decoder x1(a,b,1'b1,out);
+assign s=out[1],c=out[3];
+endmodule
+
+
+//////////////////////////Test bench for half_adder using 2 to 4 decoder////////////////////////////////////////////
+
+module tb;
+
+	// Inputs
+	reg a;
+	reg b;
+
+	// Outputs
+	wire s;
+	wire c;
+
+	// Instantiate the Unit Under Test (UUT)
+	half_adder_usingdecoder uut (
+		.a(a), 
+		.b(b), 
+		.s(s), 
+		.c(c)
+	);
+
+	initial begin
+		// Initialize Inputs
+		a = 0;
+		b = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+      a=0;
+		b=1;
+		#100;
+		a=1;
+		b=0;
+		#100;
+		a=1;
+		b=1;
+		#100;
+	end
+      
+endmodule
+
