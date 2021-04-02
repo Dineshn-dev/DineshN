@@ -1,0 +1,75 @@
+///////////////////////////////// verilog_code for sevensegment display//////////////////////////////
+
+module seven_segment_display(out,in,en
+    );
+output reg [6:0] out;
+input [3:0] in;
+input en;
+always@*
+begin
+case(in)
+4'd0:out=7'b0111111;
+4'd1:out=7'b0000110;
+4'd2:out=7'b1011011;
+4'd3:out=7'b1001111;
+4'd4:out=7'b1100110;
+4'd5:out=7'b1101101;
+4'd6:out=7'b1111001;
+4'd7:out=7'b0000111;
+4'd8:out=7'b1111111;
+4'd9:out=7'b1100111;
+default:out=7'd0;
+endcase
+end
+endmodule
+
+////////////////////////Testbench for seven_segment display////////////////////
+module sevenseg_tb;
+
+	// Inputs
+	reg [3:0] in;
+	reg en;
+
+	// Outputs
+	wire [6:0] out;
+
+	// Instantiate the Unit Under Test (UUT)
+	seven_segment_display uut (
+		.out(out), 
+		.in(in), 
+		.en(en)
+	);
+
+	initial begin
+		// Initialize Inputs
+		in = 0;
+		en = 1;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+		in=4'd1;
+		en=1;#100;
+		in=4'd1;
+		en=1;#100;
+		in=4'd2;
+		en=1;#100;
+		in=4'd3;
+		en=1;#100;
+		in=4'd4;
+		en=1;#100;
+		in=4'd5;
+		en=1;#100;
+		in=4'd6;
+		en=1;#100;
+		in=4'd7;
+		en=1;#100;
+      in=4'd8;
+		en=1;#100;
+		in=4'd9;
+		en=1;#100;
+	end
+      
+endmodule
+
