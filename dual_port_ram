@@ -1,0 +1,112 @@
+module dual_port_ram(clk,rst,wr_en,rd_en,wr_address,rd_address,data_in,data_out
+    );
+input clk,rst,wr_en,rd_en;
+parameter data_size=8,
+			 ram_depth=256,
+			 ram_width=8,
+			 address_size=8;
+input [data_size-1:0] data_in;
+input [address_size-1:0] wr_address,rd_address;
+output reg [data_size-1:0] data_out;
+reg [ram_width-1:0] ram [ram_depth-1:0];
+integer i;
+always@(posedge clk)
+begin
+//reseting the dual port ram
+if(rst)
+begin
+for(i=0;i<ram_depth;i=i+1)
+ram[i]=0;
+data_out<=0;
+end
+//writing the data on to ram and reading the data present in read address
+else if(wr_en)
+begin 
+ram[wr_address]<=data_in;
+data_out<=ram[rd_address];
+end
+//reading the data from ram and writing the data on to the address of the ram as specified by the wr_address
+else if(rd_en)
+begin
+data_out<=ram[rd_address];
+end
+end
+endmodule
+
+///////Test_bench for dual_port Ram//////////////////
+module dualport_ram_tb;
+
+	// Inputs
+	reg clk;
+	reg rst;
+	reg wr_en;
+	reg rd_en;
+	reg [7:0] wr_address;
+	reg [7:0] rd_address;
+	reg [7:0] data_in;
+
+	// Outputs
+	wire [7:0] data_out;
+
+	// Instantiate the Unit Under Test (UUT)
+	dual_port_ram uut (
+		.clk(clk), 
+		.rst(rst), 
+		.wr_en(wr_en), 
+		.rd_en(rd_en), 
+		.wr_address(wr_address), 
+		.rd_address(rd_address), 
+		.data_in(data_in), 
+		.data_out(data_out)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clk = 1;
+		rst = 1;
+		wr_en = 0;
+		rd_en = 0;
+		wr_address = 0;
+		rd_address = 0;
+		data_in = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+		rst = 0;
+		wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd1;
+		rd_address = 8'd1;
+		data_in = 8'd3;#100;
+		wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd2;
+		rd_address = 8'd2;
+		data_in = 8'd5;#100;
+		wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd63;
+		rd_address = 8'd2;
+		data_in = 8'd250;#100;
+		wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd127;
+		rd_address = 8'd63;
+		data_in = 8'd15;#100;
+		wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd255;
+		rd_address = 8'd127;
+		data_in = 8'd126;#100;
+wr_en = 1;
+		rd_en = 1;
+		wr_address = 8'd23;
+		rd_address = 8'd255;
+		data_in = 8'd126;#100;
+
+	end
+      always#50 clk=~clk;
+endmodule
+
