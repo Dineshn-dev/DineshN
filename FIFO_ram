@@ -1,0 +1,54 @@
+//verilog code for first in first out_ram//
+module FIFO_QUEUE(clk,rst,wr,rd,data_in,data_out,full,empty);
+parameter data_size=4,
+			 counter_size=3,
+			 pointer_size=3,
+			 memory_size=8;
+input clk,rst,wr,rd;
+output full,empty;
+input [data_size-1:0]data_in;
+output reg [data_size-1:0]data_out;
+reg [counter_size-1:0] wr_ptr,rd_ptr;
+reg [data_size-1:0] fifo_ram[memory_size-1:0];
+reg fifo_count;
+assign full=(fifo_count==7);
+assign empty=(fifo_count==0);
+always@(posedge clk)
+begin:write
+if((wr && !full)||(rd&&wr))
+fifo_ram[wr_ptr]<=data_in;
+end
+always@(posedge clk) 
+begin: read
+if((rd&&!empty)||(rd&&wr))
+data_out<=fifo_ram[rd_ptr];
+end
+always@(posedge clk)
+begin:pointer
+if (rst)
+begin
+wr_ptr=0;rd_ptr=0;
+data_out=0;
+end
+else
+begin
+wr_ptr<=((wr && !full)||(rd&&wr))?wr_ptr+1:wr_ptr;
+rd_ptr<=((rd && !empty)||(rd&&wr))?rd_ptr+1:rd_ptr;
+end
+end
+always@(posedge clk)
+begin:counter
+if(rst)
+fifo_count=0;
+else
+begin
+case({wr,rd})
+2'd0:fifo_count<=fifo_count;
+2'd1:fifo_count<=full?0:fifo_count+1;
+2'd2:fifo_count<=empty?7:fifo_count-1;
+2'd3:fifo_count<=fifo_count;
+default:fifo_count<=fifo_count;
+endcase
+end
+end
+endmodule
