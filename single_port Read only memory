@@ -1,0 +1,67 @@
+//////////////////////////////verilog code for single_port ram/////////////////////////////////////
+module rom(wr_clk,rd_clk,rst,address,data_out);
+input wr_clk,rd_clk,rst;
+parameter data_size=8,
+			 rom_depth=16,
+			 addr_size=4;
+input [addr_size-1:0]address;
+output reg[data_size-1:0]data_out;
+reg [data_size-1:0] rom[rom_depth-1:0];
+integer i;
+always@(posedge rd_clk or posedge wr_clk)
+begin
+if(wr_clk)
+begin
+for(i=0;i<(rom_depth-1);i=i+1)
+rom[i]<=8'd243;
+rom[15]<=8'd255;
+end
+if(rst)
+data_out=0;
+else if(rd_clk)
+data_out<=rom[address];
+end
+endmodule
+
+///////////////////////////test bench for single_port ram//////////////////////////////////////////////
+module rom_tb;
+
+	// Inputs
+	reg wr_clk;
+	reg rd_clk;
+	reg rst;
+	reg [3:0] address;
+
+	// Outputs
+	wire [7:0] data_out;
+
+	// Instantiate the Unit Under Test (UUT)
+	rom uut (
+		.wr_clk(wr_clk), 
+		.rd_clk(rd_clk), 
+		.rst(rst), 
+		.address(address), 
+		.data_out(data_out)
+	);
+
+	initial begin
+		// Initialize Inputs
+		wr_clk = 1;
+		rd_clk = 1;
+		rst = 1;
+		address = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+      wr_clk = 0;
+		rst=0;
+		address = 4'd3;#100;
+		address = 4'd8;#100;
+		address = 4'd15;#100;
+		address = 4'd15;#100;
+	end
+	always#50 rd_clk=~rd_clk;
+      
+endmodule
