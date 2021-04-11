@@ -1,0 +1,102 @@
+//////////////8bit uart code for Transmitter////////////////////////
+module uart_tx(clock,rst,en,din,data_packet,dout);
+input clock,rst,en;
+input[7:0]din;
+output reg [9:0] data_packet;
+reg start_bit,stop_bit,b_clk;
+reg [3:0]count;
+reg [9:0] temp;
+reg [9:0]d;
+reg temp1;
+output dout;
+always@(posedge clock)
+begin
+if(rst)
+begin:write
+d=0;
+data_packet=0;
+count=0;stop_bit=0;
+end
+else
+begin
+d={1'b1,din,1'b0};
+data_packet={d[9],d[8],d[7],d[6],d[5],d[4],d[3],d[2],d[1],d[0]}; 
+end
+end
+always@(posedge clock)
+begin
+if(en)
+start_bit=1;
+else
+begin
+start_bit=0;
+count<=count+1'b1;
+end
+if(start_bit)
+b_clk=1'b0;
+else if(count<11)
+b_clk=~b_clk;
+else if(count==11)
+stop_bit=1'b1;
+end
+always@(posedge clock)
+begin:shifting 
+if(b_clk && (count==0))
+begin
+temp1=0;
+temp=data_packet;
+end
+else if(count<=10 && (stop_bit==0))
+begin
+temp1<=temp[0];
+temp=temp>>1;
+end
+else if(stop_bit)
+temp1=1'b0;
+end
+assign dout=temp1;
+endmodule 
+
+////////////////////////Test bench code for uart transmitter//////////////////////////////////////
+module uart_tb;
+
+	// Inputs
+	reg clock;
+	reg rst;
+	reg en;
+	reg [7:0] din;
+
+	// Outputs
+	wire [9:0] data_packet;
+	wire dout;
+
+	// Instantiate the Unit Under Test (UUT)
+	uart_tx uut (
+		.clock(clock), 
+		.rst(rst), 
+		.en(en), 
+		.din(din), 
+		.data_packet(data_packet), 
+		.dout(dout)
+	);
+
+	initial begin
+		// Initialize Inputs
+		clock = 1;
+		rst = 1;
+		en = 1;
+		din = 0;
+
+		// Wait 100 ns for global reset to finish
+		#100;
+        
+		// Add stimulus here
+       rst=0;
+		 en=1;
+		 din=8'd15;#100;
+		 en=0;#100;
+	end
+	always#50 clock=~clock;
+      
+endmodule
+
